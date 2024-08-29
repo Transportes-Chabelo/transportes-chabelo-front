@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+.floating-label-top {
+    scale: .7;
+    left: 10px;
+    transform: translateY(-22px);
+    font-weight: 500;
+    transition: all ease-in-out 200ms;
+    background-color: 3;
+}
+
+.input::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+.input-container>.field-container>.field {
+    padding: 0 !important;
+}
+
+.input-container>.text-error {
+    font-size: 0.875rem;
+    color: rgb(239 68 68 / var(--tw-text-opacity));
+    line-height: 1.25rem;
+    font-weight: 500;
+    margin-left: 0.75rem;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+}
