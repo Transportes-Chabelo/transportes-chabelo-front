@@ -12,8 +12,8 @@ import { propsUserCreate } from '../../interfaces/service.interface';
 type Inputs = propsUserCreate;
 
 const options: Array<{ value: TypeUser, label: string }> = [
-    { label:  TypeUser.admin, value: TypeUser.admin },
-    { label: TypeUser.user , value: TypeUser.user }
+    { label: TypeUser.admin, value: TypeUser.admin },
+    { label: TypeUser.user, value: TypeUser.user }
 ];
 
 export const FormUserRegister = <T extends object>({ onSuccess }: PropsForm<T>) => {
@@ -23,8 +23,8 @@ export const FormUserRegister = <T extends object>({ onSuccess }: PropsForm<T>) 
     const { mutate, isPending } = useNewUser();
     const { showError, Message } = useHandleError();
 
-    const onSubmit: SubmitHandler<Inputs> = async ({role,...inputs}) => {        
-        mutate({...inputs, role:role?role?.value:undefined}, {
+    const onSubmit: SubmitHandler<Inputs> = async ({ role, ...inputs }) => {
+        mutate({ ...inputs, role: role ? role?.value : undefined }, {
             onSuccess: user => {
                 reset();
                 if (onSuccess) onSuccess({ exit: true });

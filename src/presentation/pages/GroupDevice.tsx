@@ -1,8 +1,8 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { DeviceGroupResponse, TypeUser} from "../../interfaces";
+import { DeviceGroupResponse, TypeUser } from "../../interfaces";
 import { useAuthStore } from "../../stores";
-import { Add, Pencil } from "../icons/icons";
+import { Add, Pencil, Update } from "../icons/icons";
 import { useQuery } from "@tanstack/react-query";
 import { useHandleError } from "../../hooks";
 import { Button } from "../components/Button";
@@ -11,23 +11,27 @@ import { IconBtn } from '../components/IconBtn';
 import { Table } from "../components/Table";
 import { DeviceGroupService } from "../../services/device-group.service";
 import { TextField } from "../components/TextField";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useGroupDeviceCreate, useGroupDeviceUpdate } from "../../hooks/useDeviceGroup";
 
 
 export const GroupDevicePage = () => {
     const user = useAuthStore(state => state.user);
     const { showError } = useHandleError();
     const [value, setValue] = useState<DeviceGroupResponse | undefined>();
-    // const { handleSubmit, control, reset, setError } = useForm<{name:string}>({ defaultValues: { name: '' } });
+    const inputRef = useRef<HTMLInputElement>(null);
 
-    // const { mutate, isPending } = useNewUser();
+    const { handleSubmit, control, reset, setError, setValue: setValueForm } = useForm<{ name: string }>({ defaultValues: { name: '' } });
+
+    const mutationCreate = useGroupDeviceCreate();
+    const mutationUpdate = useGroupDeviceUpdate();
 
     const { data, isLoading, isFetching, error, refetch } = useQuery({
         queryKey: ['device-group'],
         queryFn: () => DeviceGroupService.groups(),
         refetchOnWindowFocus: true,
-        refetchOnMount:true,
-        refetchOnReconnect:true
+        refetchOnMount: true,
+        refetchOnReconnect: true
     });
 
     const columns = useMemo<ColumnDef<DeviceGroupResponse>[]>(() => [
@@ -39,12 +43,44 @@ export const GroupDevicePage = () => {
     const actions = ({ row: { original } }: { row: Row<DeviceGroupResponse> }) => {
         return (
             <div className="flex gap-2">
-                <IconBtn className="text-blue-500" children={<Pencil />} onClick={() => {}} />
+                <IconBtn className="text-blue-500" children={<Pencil />} onClick={() => { setValue(original) }} />
             </div>
         )
     }
+    const onSubmit: SubmitHandler<{ name: string }> = async ({ name }) => {
+        if (value) {
+            mutationUpdate.mutate({id:value.id,name}, {
+                onSuccess() {
+                    setValue(undefined);
+                    refetch();
+                    reset();
+                },
+                onError(error) {
+                    showError({ responseError: error, exit: true })
+                },
+            });
+        }else {
+            mutationCreate.mutate(name, {
+                onSuccess() {
+                    refetch();
+                    reset();
+                },
+                onError(error) {
+                    showError({ responseError: error, exit: true })
+                },
+            });
+        }
+    }
 
     if (!isFetching && !isLoading && error) showError({ responseError: error, exit: true });
+
+    useEffect(() => {
+        if (value) {
+            setValueForm('name', value.name.toLowerCase().replace(/#|_/g, ' '))
+            inputRef.current?.focus();
+        }
+    }, [setValueForm, value])
+
 
     return (user?.role === TypeUser.user)
         ? <Navigate to="/home" />
@@ -52,25 +88,34 @@ export const GroupDevicePage = () => {
         <article className="flex-1 flex flex-col px-1 items-center">
             <header className="flex w-full m-1 h-16 items-center justify-between">
                 <h1 className="text-4xl font-semibold" >Device Group</h1>
-                <span>
-                    {/* <TextField /> */}
-                    <Button className="flex gap-2 items-center" onClick={() => {}}>
-                        <Add />
-                        Add Device
-                    </Button>
+                <span className="flex gap-2 items-center">
+                    <TextField
+                        classNameContent="w-auto"
+                        reference={inputRef}
+                        control={control}
+                        name="name"
+                        labelText="Group"
+                        rules={{ required: { value: true, message: 'name is required' } }}
+                    />
+                    <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
+                        <Button type="submit" className="flex gap-2 items-center" loading={mutationUpdate.isPending||mutationCreate.isPending || isLoading}>
+                            {value ? <Update /> : <Add />}
+                            {value ? "Update Device" : "Add Device"}
+                        </Button>
+                    </form>
                 </span>
             </header>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <Table {...{
-                    KeyName:"groups",
+                    KeyName: "groups",
                     columns,
                     data: data ?? [],
                     onValue: setValue,
                     renderSubComponent: actions,
                     useInternalPagination: true,
-                    header:{title:'List groups'},
-                    maxHeight:600,
-                    shadow:true,
+                    header: { title: 'List groups' },
+                    maxHeight: 600,
+                    shadow: true,
                 }} />
             </div>
         </article >

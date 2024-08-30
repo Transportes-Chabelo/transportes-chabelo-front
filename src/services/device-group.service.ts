@@ -7,8 +7,13 @@ export class DeviceGroupService {
         return data;
     }
 
-    static create = async (name:string): Promise<DeviceGroupResponse> => {
-        const { data } = await tcApi.get<DeviceGroupResponse>(`/device-group`,{data:{name}});
+    static create = async (name: string): Promise<DeviceGroupResponse> => {
+        const { data } = await tcApi.post<DeviceGroupResponse>(`/device-group`, { name });
+        return data;
+    }
+
+    static update = async ({id,name}:{id: string, name: string}): Promise<DeviceGroupResponse> => {
+        const { data } = await tcApi.patch<DeviceGroupResponse>(`/device-group/${id}`, { name });
         return data;
     }
 }

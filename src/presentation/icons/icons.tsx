@@ -203,6 +203,15 @@ export const Add = ({ classname }: { classname?: string }) => (
         <path d="M5 12l14 0" />
     </svg>
 )
+
+export const Update = ({ classname }: { classname?: string }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`icon ${classname ?? ''}`}>
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+        <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+    </svg>
+)
+
 export const Circle = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="icon" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" strokeWidth="0" fill="currentColor" /></svg>
 )

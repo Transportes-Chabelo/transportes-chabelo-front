@@ -2,13 +2,11 @@ import { Controller } from "react-hook-form"
 import { TextFieldProps } from "../interfaces/interfaces"
 import Input from "./Input"
 
-export const TextField = <T extends object>({ control, name, labelText, ...props }: TextFieldProps<T>) => {
+export const TextField = <T extends object>({ control, name, labelText, rules, ...props }: TextFieldProps<T>) => {
     return (
         <Controller
             control={control}
-            // rules={{
-            //     required: { value: true, message: 'field is required' },
-            // }}
+            rules={rules}
             name={name}
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                 <Input
