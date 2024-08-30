@@ -1,7 +1,7 @@
 import { tcApi } from "../api/server.api";
 import { Meta, UpdateUser, UsersRespose, propsUserCreate } from "../interfaces";
 
-export interface Response {users:Array<UsersRespose>, meta:Meta}
+export interface Response { users: Array<UsersRespose>, meta: Meta }
 
 export class UserService {
     static users = async (limit: number = 5, page: number = 0): Promise<Response> => {

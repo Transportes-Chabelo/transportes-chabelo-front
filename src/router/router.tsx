@@ -35,6 +35,13 @@ export const router = createBrowserRouter([
                     return { Component: GroupDevicePage };
                 }
             },
+            {
+                path: 'home/branch/:id',
+                async lazy() {
+                    const { BranchDevicesPage } = await import('../presentation/pages/BranchDevicesPage');
+                    return { Component: BranchDevicesPage };
+                }
+            },
         ]
     },
     {

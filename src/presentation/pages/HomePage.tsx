@@ -1,68 +1,69 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "../components/Button";
 import { Loader } from "../components/Loader";
-import { AddBranch, CloudDownload, ListDevices } from "../icons/icons";
+import { Add, AddBranch, ListDevices, Pencil, Update, X } from "../icons/icons";
 import { Portal } from "../components/modals";
-import { useQuery } from "@tanstack/react-query";
-import { BranchService } from "../../services/branch.service";
 import { BranchesRespose } from "../../interfaces";
 import { IconBtn } from "../components/IconBtn";
 import { Text } from "../components/Text";
-import { CreateBranchModalContent } from "../components/modals/CreateBranchModalContent";
+import { TextField } from "../components/TextField";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useBranches, useNewBranch, useUpdateBranch } from "../../hooks/useBranch";
+import { propsBranchCreate } from '../../interfaces/service.interface';
+import { useHandleError } from "../../hooks";
+import { NavLink } from "react-router-dom";
 
 export const HomePage = () => {
-
     const dialog = useRef<HTMLDialogElement>(null);
-    // const { showError } = useHandleError();
+    const { showError } = useHandleError();
+    const mutationCreate = useNewBranch();
+    const mutationUpdate = useUpdateBranch();
+    const { data, refetch, isFetching, isLoading } = useBranches();
+    const { handleSubmit, control, reset, setValue: setValueForm } = useForm<propsBranchCreate>({ defaultValues: { name: "", address: "", city: "", zipCode: 0 } });
+    const [value, setValue] = useState<BranchesRespose | undefined>(undefined);
 
-
-    const { data, refetch, isFetching, isLoading } = useQuery({
-        queryKey: ['branches'],
-        refetchOnWindowFocus: true,
-        queryFn: () => BranchService.branches(),
-    });
-
-    // if (!isFetching && !isLoading && error) showError({ responseError: error, exit: true });
-
-    // const consult = () => {
-    //     setEnd(getDate());
-    //     // refetch()
-    // }
-
-    // const download =
-    //     ({ events, keys, title, percentaje }: { events: Array<Event<string>>, keys: Array<keyof Event<string>>, title: string, percentaje: number }) => () => {
-    //         const sanityData = events.map(element => keys.map(key => key).reduce((acc, current) => ({ ...acc, [current]: element[current] }), {}));
-    //         const wb = utils.book_new();
-    //         const ws = utils.json_to_sheet([[]]);
-    //         utils.sheet_add_json(ws, sanityData);
-    //         utils.sheet_add_aoa(ws, [["Operator", "#Events", "Percentaje"], [title, events.length, percentaje]], { origin: `${String.fromCharCode(65 + keys.length + 2)}1` });
-
-    //         utils.book_append_sheet(wb, ws, title);
-    //         writeFile(wb, `${title}dd.xlsx`);
-    //     }
+    const onSubmit: SubmitHandler<{ name: string }> = async (inputs: propsBranchCreate) => {
+        if (value) {
+            mutationUpdate.mutate({ id: value.id, props: inputs }, {
+                onSuccess() {
+                    setValue(undefined);
+                    refetch();
+                    reset();
+                },
+                onError(error) {
+                    showError({ responseError: error, exit: true })
+                },
+            });
+        } else {
+            mutationCreate.mutate(inputs, {
+                onSuccess() {
+                    refetch();
+                    reset();
+                    dialog.current?.close();
+                },
+                onError(error) {
+                    showError({ responseError: error, exit: true })
+                },
+            });
+        }
+    }
 
     const RenderBranches = useCallback(
-        ({ name,address,city,createdAt,isActive,zipCode }: BranchesRespose) => {
-            // const alarms = [...new Set(events.map(event => event.CodigoAlarma))].reduce((acc, current) => ({ ...acc, [current]: events.filter(a => a.CodigoAlarma === current).length }), {});
-            // const entries = Object.entries(alarms) as Array<[string, number]>;
-            // const keys: Array<keyof Event<string>> = ['FechaOriginal', 'Hora', 'FechaPrimeraToma', 'HoraPrimeraToma', 'CodigoCte', 'Minutes', 'CodigoAlarma', 'CodigoEvento'];
-            // const percentaje: number = data?.totalEvents ? +Math.ceil((events.length * 100) / data.totalEvents) : 0;
+        ({ name, address, city, createdAt, isActive, zipCode, id }: BranchesRespose) => {
             return (
                 <div key={name} className={`shadow-md bg-slate-200 dark:bg-slate-600 dark:shadow-slate-950 p-4 rounded-2xl relative ${isActive ? "border-green-500" : "border-red-500"} border-2`}>
-                    <div className="flex gap-4 justify-between items-center ">
-                        <span className="mb-2">
+                    <div className="flex gap-2 justify-between items-start ">
+                        <span>
                             <h3 className="text-xl font-semibold">{name}</h3>
                             <Text variant="text-sm">Devices: <b>100</b></Text>
                         </span>
-                        <span className="flex items-center gap-4">
-                            <IconBtn className="size-9 flex justify-center items-center" onClick={()=>{}} children={<CloudDownload />} />
-                            <IconBtn className="size-9 flex justify-center items-center text-blue-600 dark:text-blue-400" onClick={()=>{}} children={<ListDevices />} />
+                        <span className="flex gap-2 flex-col">
+                            <IconBtn className="size-9 flex justify-center items-center text-blue-600 dark:text-blue-400" onClick={() => setValue(data?.branches.find(f => f.id === id))} children={<Pencil />} />
+                            <NavLink to={`branch/${id}`}>
+                                <IconBtn className="size-9 flex justify-center items-center text-blue-600 dark:text-blue-400" children={<ListDevices />} />
+                            </NavLink>
                         </span>
                     </div>
-                    {/* <div className={`absolute top-1 right-4 flex gap-2 items-center`}>
-                        <div className={`h-2.5 w-2.5 rounded-full ${isActive ? "bg-green-500" : "bg-red-500"}`}/>
-                        <Text variant="text-sm" className="font-weight: 900">{isActive?'Online':'Offline'}</Text>
-                    </div> */}
                     <Text variant="text-sm"><b>Address:</b> {address}</Text>
                     <Text variant="text-sm"><b>City:</b> {city}</Text>
                     <Text variant="text-sm"><b>ZipCode:</b> {zipCode}</Text>
@@ -70,19 +71,28 @@ export const HomePage = () => {
                 </div>
             )
         },
-        [],
+        [data?.branches],
     )
+
+    useEffect(() => {
+        if (value) {
+            reset();
+            setValueForm('name', value.name);
+            setValueForm('address', value.address);
+            setValueForm('city', value.city);
+            setValueForm('zipCode', value.zipCode);
+            setValueForm('isActive', value.isActive);
+            dialog.current?.show();
+        } else {
+            dialog.current?.close();
+        }
+    }, [reset, setValueForm, value])
 
     return (
         <>
             <header className="flex w-full m-1 h-16 items-center justify-between">
                 <h1 className="text-4xl font-semibold" >Dashboard</h1>
                 <span className="flex gap-4 items-center justify-center h-full">
-                    {/* <div className="flex gap-4">
-                        <DatePicker type="datetime-local" showIcon date={start} onChange={setStart} label="Start" />
-                        <DatePicker type="datetime-local" showIcon date={end} onChange={setEnd} label="End" />
-                    </div>
-                    <Button full={false} loading={false} children="Consult" onClick={consult} /> */}
                     <Button className="flex gap-2 items-center" loading={isFetching || isLoading} onClick={() => dialog.current?.show()}>
                         <AddBranch />
                         Add branch
@@ -95,7 +105,49 @@ export const HomePage = () => {
                         :
                         <>
                             <Portal refElement={dialog} onClosed={(close) => close && dialog.current?.close()} >
-                                <CreateBranchModalContent dialog={dialog} onSuccess={({ exit }) => { if(exit) refetch() }}/>
+                                <div className="bg-slate-100 dark:bg-slate-800 p-5 rounded-xl shadow-xl dark:shadow-slate-950">
+                                    <span className="flex mb-4 justify-between items-center">
+                                        <h1 className="text-2xl font-semibold">Create user</h1>
+                                        <IconBtn onClick={() => {
+                                            dialog.current?.close();
+                                            reset();
+                                            setValue(undefined);
+                                        }} children={<X />} />
+                                    </span>
+
+                                    <form className="flex flex-1 gap-3 flex-col" onSubmit={handleSubmit(onSubmit)}>
+                                        <TextField
+                                            control={control}
+                                            name="name"
+                                            labelText="Name"
+                                            rules={{ required: { value: true, message: 'name is required' } }}
+                                        />
+                                        <TextField
+                                            control={control}
+                                            name="address"
+                                            labelText="Address"
+                                        />
+                                        <span className="flex gap-2">
+                                            <TextField
+                                                control={control}
+                                                name="city"
+                                                labelText="City"
+                                            />
+                                            <TextField
+                                                control={control}
+                                                name="zipCode"
+                                                labelText="ZipCode"
+                                                type="number"
+                                            />
+                                        </span>
+                                        <div className="flex justify-end">
+                                            <Button type="submit" className="flex gap-2 items-center" loading={mutationUpdate.isPending || mutationCreate.isPending || isLoading}>
+                                                {value ? <Update /> : <Add />}
+                                                {value ? "Update Branch" : "Add Branch"}
+                                            </Button>
+                                        </div>
+                                    </form>
+                                </div>
                             </Portal>
                             <h2 className="text-xl">Total Services per branch: algo</h2>
                             <div className="grid grid-cols-3 lg:grid-cols-4 gap-4 mt-4">

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { DeviceGroupResponse, TypeUser } from "../../interfaces";
 import { useAuthStore } from "../../stores";
 import { Add, Pencil, Update } from "../icons/icons";
@@ -9,13 +9,13 @@ import { Button } from "../components/Button";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { IconBtn } from '../components/IconBtn';
 import { Table } from "../components/Table";
-import { DeviceGroupService } from "../../services/device-group.service";
 import { TextField } from "../components/TextField";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useGroupDeviceCreate, useGroupDeviceUpdate } from "../../hooks/useDeviceGroup";
+import { useBranch } from "../../hooks/useBranch";
 
+export const BranchDevicesPage = () => {
+    let { id } = useParams<"id">();
 
-export const GroupDevicePage = () => {
     const user = useAuthStore(state => state.user);
     const { showError } = useHandleError();
     const [value, setValue] = useState<DeviceGroupResponse | undefined>();
@@ -23,16 +23,7 @@ export const GroupDevicePage = () => {
 
     const { handleSubmit, control, reset, setValue: setValueForm } = useForm<{ name: string }>({ defaultValues: { name: '' } });
 
-    const mutationCreate = useGroupDeviceCreate();
-    const mutationUpdate = useGroupDeviceUpdate();
-
-    const { data, isLoading, isFetching, error, refetch } = useQuery({
-        queryKey: ['device-group'],
-        queryFn: () => DeviceGroupService.groups(),
-        refetchOnWindowFocus: true,
-        refetchOnMount: true,
-        refetchOnReconnect: true
-    });
+    const { data, isLoading, isFetching, error, refetch } = useBranch(id ?? "");
 
     const columns = useMemo<ColumnDef<DeviceGroupResponse>[]>(() => [
         { accessorKey: 'name', header: 'name' },
@@ -47,29 +38,30 @@ export const GroupDevicePage = () => {
             </div>
         )
     }
-    const onSubmit: SubmitHandler<{ name: string }> = async ({ name }) => {
-        if (value) {
-            mutationUpdate.mutate({ id: value.id, name }, {
-                onSuccess() {
-                    setValue(undefined);
-                    refetch();
-                    reset();
-                },
-                onError(error) {
-                    showError({ responseError: error, exit: true })
-                },
-            });
-        } else {
-            mutationCreate.mutate(name, {
-                onSuccess() {
-                    refetch();
-                    reset();
-                },
-                onError(error) {
-                    showError({ responseError: error, exit: true })
-                },
-            });
-        }
+
+    const onSubmit: SubmitHandler<{ name: string }> = async () => {
+        //     if (value) {
+        //         mutationUpdate.mutate({ id: value.id, name }, {
+        //             onSuccess() {
+        //                 setValue(undefined);
+        //                 refetch();
+        //                 reset();
+        //             },
+        //             onError(error) {
+        //                 showError({ responseError: error, exit: true })
+        //             },
+        //         });
+        //     } else {
+        //         mutationCreate.mutate(name, {
+        //             onSuccess() {
+        //                 refetch();
+        //                 reset();
+        //             },
+        //             onError(error) {
+        //                 showError({ responseError: error, exit: true })
+        //             },
+        //         });
+        //     }
     }
 
     if (!isFetching && !isLoading && error) showError({ responseError: error, exit: true });
@@ -87,7 +79,7 @@ export const GroupDevicePage = () => {
         :
         <article className="flex-1 flex flex-col px-1 items-center">
             <header className="flex w-full m-1 h-16 items-center justify-between">
-                <h1 className="text-4xl font-semibold" >Device Group</h1>
+                <h1 className="text-4xl font-semibold" >Devices {data?.name}</h1>
                 <form className="flex gap-3 items-center" onSubmit={handleSubmit(onSubmit)}>
                     <TextField
                         classNameContent="w-auto"
@@ -97,7 +89,8 @@ export const GroupDevicePage = () => {
                         labelText="Group"
                         rules={{ required: { value: true, message: 'name is required' } }}
                     />
-                    <Button type="submit" className="flex gap-2 items-center" loading={mutationUpdate.isPending || mutationCreate.isPending || isLoading}>
+                    {/* <Button type="submit" className="flex gap-2 items-center" loading={mutationUpdate.isPending || mutationCreate.isPending || isLoading}> */}
+                    <Button type="submit" className="flex gap-2 items-center" loading={isLoading}>
                         {value ? <Update /> : <Add />}
                         {value ? "Update Device" : "Add Device"}
                     </Button>
@@ -107,7 +100,7 @@ export const GroupDevicePage = () => {
                 <Table {...{
                     KeyName: "groups",
                     columns,
-                    data: data ?? [],
+                    data: data?.devices ?? [],
                     onValue: setValue,
                     renderSubComponent: actions,
                     useInternalPagination: true,

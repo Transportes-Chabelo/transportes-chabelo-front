@@ -27,11 +27,12 @@ export interface BranchesRespose {
     address: string;
     zipCode: number;
     city: string;
-    isActive: string;
+    isActive: boolean;
     createdAt: string;
+    devices?: []
 }
 
-export interface DeviceGroupResponse{
+export interface DeviceGroupResponse {
     id: string;
     name: string;
     createdAt: string;
@@ -49,6 +50,14 @@ export interface propsUserCreate {
     phone?: string;
     password?: string;
     role?: TypeUser;
+    isActive?: boolean;
+}
+
+export interface propsBranchCreate {
+    name: string;
+    address?: string;
+    zipCode?: number;
+    city?: string;
     isActive?: boolean;
 }
 
