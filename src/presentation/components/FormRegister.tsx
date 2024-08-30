@@ -7,47 +7,38 @@ import { useHandleError, useNewUser } from "../../hooks";
 import { PropsForm } from "../interfaces/interfaces";
 import { toast } from "sonner";
 import { Button } from "./Button";
+import { propsUserCreate } from '../../interfaces/service.interface';
 
-type Inputs = {
-    fullName: string,
-    userName: string,
-    password: string,
-    validPassword: string,
-    token: string,
-    role: typeof options[0] | undefined,
-}
+type Inputs = propsUserCreate;
 
 const options: Array<{ value: TypeUser, label: string }> = [
-    { label: 'Administrator', value: TypeUser.admin },
-    { label: 'User', value: TypeUser.user }
+    { label:  TypeUser.admin, value: TypeUser.admin },
+    { label: TypeUser.user , value: TypeUser.user }
 ];
 
 export const FormUserRegister = <T extends object>({ onSuccess }: PropsForm<T>) => {
     const user = useAuthStore(store => store.user);
-    const { handleSubmit, control, reset, setError } = useForm<Inputs>({ defaultValues: { fullName: '', userName: '', password: '', validPassword: '', role: options[1] } });
+    const { handleSubmit, control, reset, setError } = useForm<Inputs>({ defaultValues: { fullName: '', userName: '' } });
 
     const { mutate, isPending } = useNewUser();
     const { showError, Message } = useHandleError();
 
-    const onSubmit: SubmitHandler<Inputs> = async ({ validPassword, role, ...rest }) => {
-        if (rest.password !== validPassword) {
-            setError('validPassword', { message: 'Passwords are not similar' });
-        } else {
-            mutate({ ...rest, role: role?.value, isActive: true }, {
-                onSuccess: user => {
-                    reset();
-                    onSuccess && onSuccess({ exit: true });
-                    toast.success(`User ${user.fullName} with username: ${user.userName} was created`)
-                },
-                onError: error => {
-                    const err = Message(error);
-                    if (err.includes('fullName')) setError('fullName', { message: err });
-                    else if (err.includes('userName')) setError('userName', { message: err });
-                    else if (err.includes('password')) setError('password', { message: err });
-                    else showError({ responseError: error });
-                }
-            });
-        }
+    const onSubmit: SubmitHandler<Inputs> = async ({role,...inputs}) => {        
+        mutate({...inputs, role:role?role?.value:undefined}, {
+            onSuccess: user => {
+                reset();
+                if (onSuccess) onSuccess({ exit: true });
+                toast.success(`User ${user.fullName} with username: ${user.userName} was created`)
+            },
+            onError: error => {
+                const err = Message(error);
+                if (err.includes('fullName')) setError('fullName', { message: err });
+                else if (err.includes('userName')) setError('userName', { message: err });
+                else if (err.includes('phone')) setError('phone', { message: err });
+                else if (err.includes('role')) setError('role', { message: err });
+                else showError({ responseError: error });
+            }
+        });
     };
 
     return (
@@ -66,7 +57,7 @@ export const FormUserRegister = <T extends object>({ onSuccess }: PropsForm<T>) 
                     labelText="User"
                 />
                 {
-                    (user && user.role === TypeUser.admin) &&
+                    (user && user.role !== TypeUser.user) &&
                     <SelectField
                         control={control}
                         name="role"
@@ -75,35 +66,22 @@ export const FormUserRegister = <T extends object>({ onSuccess }: PropsForm<T>) 
                     />
                 }
             </span>
-            <span className="flex gap-3">
+            <span className="flex  items-center gap-3">
+                <TextField
+                    control={control}
+                    type="number"
+                    maxLength={10}
+                    name="phone"
+                    labelText="Phone"
+                    autoCapitalize="none"
+                />
                 <TextField
                     control={control}
                     name="password"
                     labelText="Password"
-                    autoComplete="current-password"
                     autoCapitalize="none"
-                    type="password"
-                />
-                <TextField
-                    control={control}
-                    name="validPassword"
-                    autoCapitalize="none"
-                    labelText="Confirm password"
-                    autoComplete="new-password"
-                    type="password"
                 />
             </span>
-            {
-                !user &&
-                <TextField
-                    control={control}
-                    name="token"
-                    autoCapitalize="none"
-                    labelText="Access token"
-                    autoComplete="xxxx-xxxx-xxxx-xxxx"
-                    type="text"
-                />
-            }
             <div className="flex justify-center">
                 <Button className="px-6" full={false} loading={isPending} children={user ? 'Add user' : 'Create your account'} />
             </div>

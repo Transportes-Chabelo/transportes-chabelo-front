@@ -4,6 +4,7 @@ export interface User {
     id: string;
     fullName: string;
     userName: string;
+    phone: string;
     role: TypeUser;
     isActive: boolean;
 }

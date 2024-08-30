@@ -5,9 +5,6 @@ export const SelectField = <T extends object>({ control, name, ...props }: Selec
     return (
         <Controller
             control={control}
-            rules={{
-                required: { value: true, message: 'field is required' },
-            }}
             name={name}
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
                 return (

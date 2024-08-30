@@ -9,11 +9,4 @@ export const routesAuth: Array<RouteObject> = [
             return { Component: LogInPage };
         }
     },
-    {
-        path: 'register',
-        async lazy() {
-            const { RegisterPage } = await import('../pages/RegisterPage');
-            return { Component: RegisterPage };
-        }
-    }
 ]

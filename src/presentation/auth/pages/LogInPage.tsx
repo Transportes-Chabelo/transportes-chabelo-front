@@ -1,13 +1,10 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Text } from '../../components/Text';
-import { Link } from "react-router-dom";
 import { TextField } from "../../components/TextField";
 import { AuthService } from "../../../services/auth.service";
 import { useMutation } from "@tanstack/react-query";
 import { useAuthStore } from "../../../stores";
 import { useHandleError } from "../../../hooks";
 import { Button } from "../../components/Button";
-import { Divide } from "../../components/Divide";
 
 type InputsLogIn = {
   userName: string,
@@ -22,7 +19,9 @@ export const LogInPage = () => {
 
   const onSubmit: SubmitHandler<InputsLogIn> = async (data) =>
     mutate(data, {
-      onSuccess: ({ token, ...rest }) => logIn(rest, token),
+      onSuccess: ({ token, ...rest }) => {
+        logIn(rest, token)
+      },
       onError: error => showError({ responseError: error }),
     });
 
@@ -42,8 +41,8 @@ export const LogInPage = () => {
           type="password"
         />
         <Button loading={isPending} children="Sign in" />
-        <Divide label="or" />
-        <Text variant="text-lg" className="sform-container_text">Don't have an account? <Link to={'/auth/register'}><strong>Sign up</strong></Link></Text>
+        {/* <Divide label="or" />
+        <Text variant="text-lg" className="sform-container_text">Don't have an account? <Link to={'/auth/register'}><strong>Sign up</strong></Link></Text> */}
       </form>
     </article>
   )

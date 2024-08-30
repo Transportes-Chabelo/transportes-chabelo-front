@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { useAuthStore } from '../stores';
-const monwebApi = axios.create({
+const tcApi = axios.create({
   baseURL: import.meta.env.VITE_REACT_API_URL
 });
 
-monwebApi.interceptors.request.use(
+tcApi.interceptors.request.use(
   (config) => {
     const token = useAuthStore.getState().token ?? '';
     if (token) config.headers['Authorization'] = `Bearer ${token}`;
@@ -12,4 +12,4 @@ monwebApi.interceptors.request.use(
   }
 );
 
-export { monwebApi };
+export { tcApi };

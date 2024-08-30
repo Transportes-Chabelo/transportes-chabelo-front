@@ -1,6 +1,5 @@
-import { createBrowserRouter, Outlet } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import { NotFoundPage } from "../presentation/pages/not-found.page";
-import { routesReports } from '../presentation/reports/routes/router';
 import { routesAuth } from '../presentation/auth/routes/router';
 
 export const router = createBrowserRouter([
@@ -30,10 +29,12 @@ export const router = createBrowserRouter([
                 }
             },
             {
-                path: 'reports',
-                element: <Outlet />,
-                children: routesReports
-            }
+                path: 'group-device',
+                async lazy() {
+                    const { GroupDevicePage } = await import('../presentation/pages/GroupDevice');
+                    return { Component: GroupDevicePage };
+                }
+            },
         ]
     },
     {

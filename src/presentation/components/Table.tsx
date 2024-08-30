@@ -7,6 +7,7 @@ import { Text } from './Text';
 
 
 interface PropsTable<T> {
+    KeyName:string;
     data: Array<T>;
     columns: Array<ColumnDef<T>>;
     renderSubComponent?: (props: { row: Row<T> }) => React.ReactElement;
@@ -20,7 +21,7 @@ interface PropsTable<T> {
     onValue?: (value: T) => void;
 }
 
-export const Table = <T extends object>({ data, columns, useInternalPagination, selectRow, header, maxHeight, shadow, onValue, renderSubComponent }: PropsTable<T>) => {
+export const Table = <T extends object>({ data, columns, useInternalPagination, selectRow, header, maxHeight, shadow, onValue, renderSubComponent, KeyName}: PropsTable<T>) => {
 
     const [Columns, setColumns] = useState<ColumnDef<T>[]>(columns);
     const [isSearch, setIsSearch] = useState<boolean>(false);
@@ -71,7 +72,7 @@ export const Table = <T extends object>({ data, columns, useInternalPagination, 
     }, [columns, selectRow]);
 
     return (
-        <div className={`flex flex-col rounded-lg ${shadow ? "shadow-md" : ""} dark:text-slate-300`}>
+        <div key={KeyName} className={`flex flex-col rounded-lg ${shadow ? "shadow-md" : ""} dark:text-slate-300`}>
             {header &&
                 <section className={`flex justify-between items-center text-gray-700 bg-slate-300 dark:bg-slate-950  py-2 px-4 rounded-t-lg`}>
                     <div>
@@ -87,8 +88,8 @@ export const Table = <T extends object>({ data, columns, useInternalPagination, 
                         }
                     </div>
                     <div className='flex gap-2'>
-                        {!isSearch && <IconBtn children={<Search />} onClick={() => setIsSearch(true)} />}
-                        <IconBtn children={<CloudDownload />} onClick={download} />
+                        {!isSearch && <IconBtn className="size-9 flex justify-center items-center text-blue-600 dark:text-blue-400" onClick={()=>setIsSearch(true)} children={<Search />} />}
+                        <IconBtn className="size-9 flex justify-center items-center text-blue-600 dark:text-blue-400" onClick={download} children={<CloudDownload />} />
                     </div>
                 </section>
             }

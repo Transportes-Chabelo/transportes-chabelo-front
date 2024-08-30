@@ -6,9 +6,9 @@ export const TextField = <T extends object>({ control, name, labelText, ...props
     return (
         <Controller
             control={control}
-            rules={{
-                required: { value: true, message: 'field is required' },
-            }}
+            // rules={{
+            //     required: { value: true, message: 'field is required' },
+            // }}
             name={name}
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                 <Input

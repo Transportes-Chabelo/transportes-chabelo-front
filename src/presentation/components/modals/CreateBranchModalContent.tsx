@@ -3,7 +3,7 @@ import { ModalContent } from "../../interfaces/interfaces";
 import { FormUserRegister } from "../FormRegister";
 import { IconBtn } from "../IconBtn";
 
-export const CreateUserModalContent = <T extends object>({ dialog, onSuccess }: ModalContent<T>) => {
+export const CreateBranchModalContent = <T extends object>({ dialog, onSuccess }: ModalContent<T>) => {
 
     const Success = (exit: boolean) => {
         if(onSuccess) onSuccess({ exit });

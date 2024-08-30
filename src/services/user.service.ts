@@ -1,24 +1,31 @@
-import { monwebApi } from "../api/monweb.api";
-import { UpdateUser, UsersRespose, propsUserCreate } from "../interfaces";
+import { tcApi } from "../api/server.api";
+import { Meta, UpdateUser, UsersRespose, propsUserCreate } from "../interfaces";
+
+export interface Response {users:Array<UsersRespose>, meta:Meta}
 
 export class UserService {
-    static users = async (limit: number = 5, offset: number = 0): Promise<Array<UsersRespose>> => {
-        const { data } = await monwebApi.get<Array<UsersRespose>>(`/user`, { params: { limit, offset } });
+    static users = async (limit: number = 5, page: number = 0): Promise<Response> => {
+        const { data } = await tcApi.get<Response>(`/user`, { params: { limit, page } });
         return data;
     }
 
     static create = async (props: propsUserCreate): Promise<UsersRespose> => {
-        const { data } = await monwebApi.post<UsersRespose>('/user', props);
+        const { data } = await tcApi.post<UsersRespose>('/user', props);
         return data;
     }
 
     static delete = async (id: string) => {
-        const { data } = await monwebApi.delete<boolean>(`/user/${id}`);
+        const { data } = await tcApi.delete<boolean>(`/user/${id}`);
+        return data;
+    }
+
+    static reActivate = async (id: string) => {
+        const { data } = await tcApi.get<boolean>(`/user/re-activate/${id}`);
         return data;
     }
 
     static update = async ({ id, user }: { id: string, user: UpdateUser<propsUserCreate> }) => {
-        const { data } = await monwebApi.patch<UsersRespose>(`/user/${id}`, user);
+        const { data } = await tcApi.patch<UsersRespose>(`/user/${id}`, user);
         return data;
     }
 
