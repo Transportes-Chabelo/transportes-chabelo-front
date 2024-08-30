@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFieldChanges } from "../../hooks";
 
 export interface Props extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
@@ -13,6 +13,12 @@ export interface Props extends React.DetailedHTMLProps<React.InputHTMLAttributes
 
 const Input = ({ labelText, error, styleField, leading, trailing, classNameContent, reference, ...props }: Props) => {
     const { inputRef, floatingLabel, onBlur, onFocus } = useFieldChanges({ reference });
+    useEffect(() => {
+        if(props.value && props.value.toString().length > 0){
+            floatingLabel.current?.classList.add('floating-label-top');
+        }
+    }, [floatingLabel, props.value])
+    
     return (
         <div className={`realtive ${classNameContent}`}>
             <div style={styleField} className={`relative h-[50px] w-full rounded-lg border border-slate-400`}>

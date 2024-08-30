@@ -1,38 +1,27 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Navigate } from "react-router-dom";
-import { DeviceGroupResponse, TypeUser } from "../../interfaces";
-import { useAuthStore } from "../../stores";
+import { DeviceGroupResponse } from "../../interfaces";
 import { Add, Pencil, Update } from "../icons/icons";
-import { useQuery } from "@tanstack/react-query";
 import { useHandleError } from "../../hooks";
 import { Button } from "../components/Button";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { IconBtn } from '../components/IconBtn';
 import { Table } from "../components/Table";
-import { DeviceGroupService } from "../../services/device-group.service";
 import { TextField } from "../components/TextField";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useGroupDeviceCreate, useGroupDeviceUpdate } from "../../hooks/useDeviceGroup";
+import { useGroupDeviceCreate, useGroupDeviceUpdate, useGroupDevice } from "../../hooks/useDeviceGroup";
 
 
 export const GroupDevicePage = () => {
-    const user = useAuthStore(state => state.user);
     const { showError } = useHandleError();
     const [value, setValue] = useState<DeviceGroupResponse | undefined>();
     const inputRef = useRef<HTMLInputElement>(null);
-
+    
     const { handleSubmit, control, reset, setValue: setValueForm } = useForm<{ name: string }>({ defaultValues: { name: '' } });
-
+    
     const mutationCreate = useGroupDeviceCreate();
     const mutationUpdate = useGroupDeviceUpdate();
 
-    const { data, isLoading, isFetching, error, refetch } = useQuery({
-        queryKey: ['device-group'],
-        queryFn: () => DeviceGroupService.groups(),
-        refetchOnWindowFocus: true,
-        refetchOnMount: true,
-        refetchOnReconnect: true
-    });
+    const { data, isLoading, isFetching, error, refetch } = useGroupDevice();
 
     const columns = useMemo<ColumnDef<DeviceGroupResponse>[]>(() => [
         { accessorKey: 'name', header: 'name' },
@@ -82,9 +71,7 @@ export const GroupDevicePage = () => {
     }, [setValueForm, value])
 
 
-    return (user?.role === TypeUser.user)
-        ? <Navigate to="/home" />
-        :
+    return (
         <article className="flex-1 flex flex-col px-1 items-center">
             <header className="flex w-full m-1 h-16 items-center justify-between">
                 <h1 className="text-4xl font-semibold" >Device Group</h1>
@@ -117,4 +104,5 @@ export const GroupDevicePage = () => {
                 }} />
             </div>
         </article >
+    )   
 };

@@ -55,12 +55,11 @@ export const HomePage = () => {
                     <div className="flex gap-2 justify-between items-start ">
                         <span>
                             <h3 className="text-xl font-semibold">{name}</h3>
-                            <Text variant="text-sm">Devices: <b>100</b></Text>
                         </span>
                         <span className="flex gap-2 flex-col">
-                            <IconBtn className="size-9 flex justify-center items-center text-blue-600 dark:text-blue-400" onClick={() => setValue(data?.branches.find(f => f.id === id))} children={<Pencil />} />
+                            <IconBtn className="size-7 flex justify-center items-center text-blue-600 dark:text-blue-400" onClick={() => setValue(data?.branches.find(f => f.id === id))} children={<Pencil />} />
                             <NavLink to={`branch/${id}`}>
-                                <IconBtn className="size-9 flex justify-center items-center text-blue-600 dark:text-blue-400" children={<ListDevices />} />
+                                <IconBtn className="size-7 flex justify-center items-center text-blue-600 dark:text-blue-400" children={<ListDevices />} />
                             </NavLink>
                         </span>
                     </div>
@@ -107,7 +106,7 @@ export const HomePage = () => {
                             <Portal refElement={dialog} onClosed={(close) => close && dialog.current?.close()} >
                                 <div className="bg-slate-100 dark:bg-slate-800 p-5 rounded-xl shadow-xl dark:shadow-slate-950">
                                     <span className="flex mb-4 justify-between items-center">
-                                        <h1 className="text-2xl font-semibold">Create user</h1>
+                                        <h1 className="text-2xl font-semibold">Create branch</h1>
                                         <IconBtn onClick={() => {
                                             dialog.current?.close();
                                             reset();

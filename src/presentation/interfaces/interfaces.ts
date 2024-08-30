@@ -12,6 +12,7 @@ export interface TextFieldProps<T extends FieldValues> extends Props {
 export interface SelecFieldProps<T extends FieldValues> extends SelectProps {
     control: Control<T, any>;
     name: Path<T>;
+    rules?: Omit<RegisterOptions<T, Path<T>>, "disabled" | "valueAsNumber" | "valueAsDate" | "setValueAs"> | undefined;
 }
 
 export interface ModalContent<T> extends PropsForm<T> {

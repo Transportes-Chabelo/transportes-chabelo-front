@@ -24,7 +24,7 @@ const Select = ({ error, styleContent, styleField, leading, ...props }: Props) =
                     />
                 </label>
             </label>
-            {error && <Text className="text-error">{error}</Text>}
+            {error && <p className="text-red-500 dark:text-red-400 ml-3 font-medium text-sm">{error}</p>}
         </div>
     )
 };

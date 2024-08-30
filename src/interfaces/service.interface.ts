@@ -29,13 +29,25 @@ export interface BranchesRespose {
     city: string;
     isActive: boolean;
     createdAt: string;
-    devices?: []
+    devices?: Array<DeviceResponse>
 }
 
 export interface DeviceGroupResponse {
     id: string;
     name: string;
     createdAt: string;
+}
+
+export interface DeviceResponse {
+    id: string;
+    name: string;
+    brand: string;
+    model: string;
+    barCode: string;
+    price: number;
+    status: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface ErrorResponse {
@@ -59,6 +71,42 @@ export interface propsBranchCreate {
     zipCode?: number;
     city?: string;
     isActive?: boolean;
+}
+
+export interface propsFormDeviceCreate {
+    name: string;
+    brand: string;
+    model: string;
+    barCode?: string;  
+    price?: number;
+    status: {label:string, value:any};
+    deviceGroupId: {label:string, value:any};
+    deviceId?: string;
+    branchId: string;
+}
+
+export interface propsDeviceCreate {
+    name: string;
+    brand: string;
+    model: string;
+    barCode?: string;  
+    price?: number;
+    status: string;
+    deviceGroupId: string;
+    deviceId?: string;
+    branchId: string;
+}
+
+export interface propsDeviceCreateU {
+    name: string;
+    brand: string;
+    model: string;
+    barCode?: string;  
+    price?: number;
+    status: {label:string, value:any};
+    deviceGroupId: {label:string, value:any};
+    deviceId?: string;
+    branchId: string;
 }
 
 export type UpdateUser<T> = {

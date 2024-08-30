@@ -1,10 +1,11 @@
 import { Controller } from "react-hook-form"
 import { SelecFieldProps } from '../interfaces/interfaces'; import Select from "./Select";
 
-export const SelectField = <T extends object>({ control, name, ...props }: SelecFieldProps<T>) => {
+export const SelectField = <T extends object>({ control, name,rules, ...props }: SelecFieldProps<T>) => {
     return (
         <Controller
             control={control}
+            rules={rules}
             name={name}
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
                 return (
