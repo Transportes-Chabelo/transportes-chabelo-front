@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { DeviceResponse, propsFormDeviceCreate } from "../../interfaces";
@@ -27,7 +28,7 @@ const options: Array<{ value: string, label: string }> = [
 ];
 
 export const BranchDevicesPage = () => {
-    let { id } = useParams<"id">();
+    const  { id } = useParams<"id">();
     const { showError } = useHandleError();
     const [value, setValue] = useState<any | undefined>(undefined);
     const [value2, setValue2] = useState<any | undefined>(undefined);
@@ -68,6 +69,7 @@ export const BranchDevicesPage = () => {
                     formservice.resetField('textService');
                     dialog2.current?.show();
                 }} />
+                <Button children="watch services"/>
             </div>
         )
     }

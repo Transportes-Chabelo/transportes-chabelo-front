@@ -9,7 +9,7 @@ import { Table } from "../components/Table";
 import { TextField } from "../components/TextField";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useGroupDeviceCreate, useGroupDeviceUpdate, useGroupDevice } from "../../hooks/useDeviceGroup";
-
+import { toast } from "sonner";
 
 export const GroupDevicePage = () => {
     const { showError } = useHandleError();
@@ -40,6 +40,7 @@ export const GroupDevicePage = () => {
         if (value) {
             mutationUpdate.mutate({ id: value.id, name }, {
                 onSuccess() {
+                    toast.success('Group Updated ...');
                     setValue(undefined);
                     refetch();
                     reset();
@@ -51,6 +52,7 @@ export const GroupDevicePage = () => {
         } else {
             mutationCreate.mutate(name, {
                 onSuccess() {
+                    toast.success('Group Created ...');
                     refetch();
                     reset();
                 },
@@ -72,7 +74,7 @@ export const GroupDevicePage = () => {
 
 
     return (
-        <article className="flex-1 flex flex-col px-1 items-center">
+        <article className="flex-1 flex flex-col px-1">
             <header className="flex w-full m-1 h-16 items-center justify-between">
                 <h1 className="text-4xl font-semibold" >Device Group</h1>
                 <form className="flex gap-3 items-center" onSubmit={handleSubmit(onSubmit)}>
@@ -99,7 +101,7 @@ export const GroupDevicePage = () => {
                     renderSubComponent: actions,
                     useInternalPagination: true,
                     header: { title: 'List groups' },
-                    maxHeight: 600,
+                    maxHeight: 450,
                     shadow: true,
                 }} />
             </div>

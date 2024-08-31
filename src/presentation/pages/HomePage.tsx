@@ -12,6 +12,8 @@ import { useBranches, useNewBranch, useUpdateBranch } from "../../hooks/useBranc
 import { propsBranchCreate } from '../../interfaces/service.interface';
 import { useHandleError } from "../../hooks";
 import { NavLink } from "react-router-dom";
+import { toast } from "sonner";
+
 
 export const HomePage = () => {
     const dialog = useRef<HTMLDialogElement>(null);
@@ -26,6 +28,7 @@ export const HomePage = () => {
         if (value) {
             mutationUpdate.mutate({ id: value.id, props: inputs }, {
                 onSuccess() {
+                    toast.success('Branch created ...');
                     setValue(undefined);
                     refetch();
                     reset();
@@ -37,6 +40,7 @@ export const HomePage = () => {
         } else {
             mutationCreate.mutate(inputs, {
                 onSuccess() {
+                    toast.success('Branch updated ...');
                     refetch();
                     reset();
                     dialog.current?.close();
