@@ -20,15 +20,17 @@ import { toast } from "sonner";
 
 
 const options: Array<{ value: string, label: string }> = [
-    { label: "NUEVO", value: "NUEVO" },
-    { label: "USADO", value: "USADO" },
-    { label: "REPARADO", value: "REPARADO" },
-    { label: "AVERIADO", value: "AVERIADO" },
-    { label: "CAMBIADO", value: "CAMBIADO" }
+    { label: "REQUIERE MANTENIMIENTO", value: "REQUIERE MANTENIMIENTO" },
+    { label: "fUNCIONANDO CORRECTAMENTE", value: "fUNCIONANDO CORRECTAMENTE" },
+    { label: "DESCOMPUESTO", value: "DESCOMPUESTO" },
+    { label: "SIN USAR", value: "SIN USAR" },
+    { label: "DESCONOCIDO", value: "DESCONOCIDO" }
 ];
 
+const defaultValues: propsFormDeviceCreate = { name: '', brand: '', model: '', barCode: '', deviceId: undefined, branchId: '', deviceGroupId: {label:'',value:''}, price: undefined, status: {label:'',value:''}}
+
 export const BranchDevicesPage = () => {
-    const  { id } = useParams<"id">();
+    const { id } = useParams<"id">();
     const { showError } = useHandleError();
     const [value, setValue] = useState<any | undefined>(undefined);
     const [value2, setValue2] = useState<any | undefined>(undefined);
@@ -41,7 +43,7 @@ export const BranchDevicesPage = () => {
 
     const { data: groups } = useGroupDevice();
 
-    const { handleSubmit, control, reset, setValue: setValueForm } = useForm<propsFormDeviceCreate>({ defaultValues: { name: '', brand: '', model: '', barCode: '' } });
+    const { handleSubmit, control, reset, setValue: setValueForm } = useForm<propsFormDeviceCreate>({ defaultValues });
 
     const formservice = useForm<{ textService: string }>({ defaultValues: { textService: '' } });
 
@@ -61,6 +63,10 @@ export const BranchDevicesPage = () => {
     const actions = ({ row: { original: { name, brand, model, status, barCode, price, id } } }: { row: Row<DeviceResponse> }) => {
         return (
             <div className="flex gap-2">
+                <IconBtn className="text-blue-500" children={<Add />} onClick={() => {
+                    dialog.current?.show();
+                    setValueForm('deviceId', id);
+                }} />
                 <IconBtn className="text-blue-500" children={<Pencil />} onClick={() => {
                     setValue({ name, brand, model, status: options.find(f => f.value == status) ?? options[0], barCode, price, id });
                 }} />
@@ -69,7 +75,7 @@ export const BranchDevicesPage = () => {
                     formservice.resetField('textService');
                     dialog2.current?.show();
                 }} />
-                <Button children="watch services"/>
+                <Button children="watch services" />
             </div>
         )
     }
@@ -78,25 +84,26 @@ export const BranchDevicesPage = () => {
         async (values) => {
             if (value) {
                 const { name, brand, model, barCode, price } = values
-
                 mutationUpdate.mutate({ id: value.id, props: { name, brand, model, status: values.status.value, barCode, price } }, {
                     onSuccess() {
                         toast.success('Device Updated ...');
                         setValue(undefined);
                         refetch();
-                        reset();
+                        reset(defaultValues);
                     },
                     onError(error) {
                         showError({ responseError: error, exit: true })
                     },
                 });
             } else {
+                // console.log(values);
+                
                 mutationCreate.mutate({ ...values, branchId: data!.id, deviceGroupId: values.deviceGroupId.value, status: values.status.value }, {
                     onSuccess() {
                         toast.success('Device Created ...');
                         dialog.current?.close();
                         refetch();
-                        reset();
+                        reset(defaultValues);
                     },
                     onError(error) {
                         showError({ responseError: error, exit: true })
@@ -144,18 +151,28 @@ export const BranchDevicesPage = () => {
 
     return (
         <article className="flex-1 flex flex-col px-1">
-            <Portal refElement={dialog} onClosed={(close) => close && dialog.current?.close()} >
+            <Portal refElement={dialog} onClosed={(close) => {
+                if (close) dialog.current?.close();
+                reset(defaultValues);
+            }} >
                 <div className="bg-slate-100 dark:bg-slate-800 p-5 rounded-xl shadow-md dark:shadow-slate-950 w-[600px]">
                     <span className="flex mb-4 justify-between items-center">
                         <h1 className="text-2xl font-semibold">Create Device for {data?.name}</h1>
                         <IconBtn onClick={() => {
                             dialog.current?.close();
-                            reset();
+                            reset(defaultValues);
                             setValue(undefined);
                         }} children={<X />} />
                     </span>
 
                     <form className="flex flex-1 gap-3 flex-col" onSubmit={handleSubmit(onSubmit)}>
+                        <TextField
+                            classNameContent="flex-1"
+                            control={control}
+                            name="deviceId"
+                            labelText="Device"
+                            disabled
+                        />
                         {
                             !value && <span className="flex gap-2">
                                 <SelectField
@@ -218,7 +235,7 @@ export const BranchDevicesPage = () => {
                         <div className="flex justify-end">
                             <Button type="submit" className="flex gap-2 items-center" loading={isLoading}>
                                 {value ? <Update /> : <Add />}
-                                {value ? "Update Branch" : "Add Branch"}
+                                {value ? "Update Device" : "Add Device"}
                             </Button>
                         </div>
                     </form>
