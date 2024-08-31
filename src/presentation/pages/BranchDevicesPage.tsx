@@ -7,13 +7,16 @@ import { Button } from "../components/Button";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { IconBtn } from '../components/IconBtn';
 import { Table } from "../components/Table";
-import { TextField } from "../components/TextField";
+import { TextArea, TextField } from "../components/TextField";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useBranch } from "../../hooks/useBranch";
 import { Portal } from "../components/modals";
 import { SelectField } from "../components/SelectField";
 import { useNewDevice, useNewDeviceservice, useUpdateDevice } from "../../hooks/useDevice";
 import { useGroupDevice } from "../../hooks/useDeviceGroup";
+import { Text } from "../components/Text";
+import { toast } from "sonner";
+
 
 const options: Array<{ value: string, label: string }> = [
     { label: "NUEVO", value: "NUEVO" },
@@ -39,7 +42,7 @@ export const BranchDevicesPage = () => {
 
     const { handleSubmit, control, reset, setValue: setValueForm } = useForm<propsFormDeviceCreate>({ defaultValues: { name: '', brand: '', model: '', barCode: '' } });
 
-    const formservice= useForm<{ textService: string }>({ defaultValues: { textService: '' } });
+    const formservice = useForm<{ textService: string }>({ defaultValues: { textService: '' } });
 
     const { data, isLoading, isFetching, error, refetch } = useBranch(id ?? "");
 
@@ -62,6 +65,7 @@ export const BranchDevicesPage = () => {
                 }} />
                 <IconBtn className="text-green-500" children={<ArrowLeft className="rotate-180" />} onClick={() => {
                     setValue2({ id, name });
+                    formservice.resetField('textService');
                     dialog2.current?.show();
                 }} />
             </div>
@@ -75,6 +79,7 @@ export const BranchDevicesPage = () => {
 
                 mutationUpdate.mutate({ id: value.id, props: { name, brand, model, status: values.status.value, barCode, price } }, {
                     onSuccess() {
+                        toast.success('Device Updated ...');
                         setValue(undefined);
                         refetch();
                         reset();
@@ -86,6 +91,7 @@ export const BranchDevicesPage = () => {
             } else {
                 mutationCreate.mutate({ ...values, branchId: data!.id, deviceGroupId: values.deviceGroupId.value, status: values.status.value }, {
                     onSuccess() {
+                        toast.success('Device Created ...');
                         dialog.current?.close();
                         refetch();
                         reset();
@@ -100,10 +106,11 @@ export const BranchDevicesPage = () => {
 
 
     const onSubmit2: SubmitHandler<{ textService: string }> = useCallback(
-        async ({textService}) => {
+        async ({ textService }) => {
             if (value2) {
-                mutationCreateService.mutate({id:value2.id,observation: textService}, {
+                mutationCreateService.mutate({ id: value2.id, observation: textService }, {
                     onSuccess() {
+                        toast.success('Service Created ...');
                         dialog2.current?.close();
                         refetch();
                         formservice.reset();
@@ -113,7 +120,7 @@ export const BranchDevicesPage = () => {
                     },
                 });
             }
-        }, [mutationCreateService, formservice.reset, showError, value2]
+        }, [value2, mutationCreateService, refetch, formservice, showError]
     )
 
     if (!isFetching && !isLoading && error) showError({ responseError: error, exit: true });
@@ -225,8 +232,12 @@ export const BranchDevicesPage = () => {
                             setValue2(undefined);
                         }} children={<X />} />
                     </span>
+                    <Text>Observations: </Text>
                     <form className="flex flex-1 gap-3 flex-col h-[300px]" onSubmit={formservice.handleSubmit(onSubmit2)}>
-                        <textarea className="flex flex-1 text-black p-3" placeholder="Insert Observations"/>
+                        <TextArea
+                            control={formservice.control}
+                            name="textService"
+                        />
                         <div className="flex justify-end">
                             <Button type="submit" className="flex gap-2 items-center" loading={isLoading}>
                                 <Add />
