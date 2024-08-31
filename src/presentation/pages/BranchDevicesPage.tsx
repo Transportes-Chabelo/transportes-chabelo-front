@@ -75,7 +75,7 @@ export const BranchDevicesPage = () => {
                     formservice.resetField('textService');
                     dialog2.current?.show();
                 }} />
-                <Button children="watch services" />
+                {/* <Button children="watch services" /> */}
             </div>
         )
     }
@@ -287,7 +287,7 @@ export const BranchDevicesPage = () => {
                     renderSubComponent: actions,
                     useInternalPagination: true,
                     header: { title: 'List groups' },
-                    maxHeight: 600,
+                    maxHeight: 450,
                     shadow: true,
                 }} />
             </div>
