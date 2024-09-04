@@ -63,7 +63,7 @@ export const NavBar = () => {
     return (
         <nav className="bg-slate-50 dark:bg-slate-900 fixed left-0 right-0 top-0 z-50 transition-colors">
             <div className="flex flex-wrap items-center justify-end sm:justify-between mx-auto p-4">
-                <a href="https://pem-sa.com/" className="flex items-center space-x-3 rtl:space-x-reverse">
+                <a className="flex items-center space-x-3 rtl:space-x-reverse">
                     {/* <img src={logo} className="dark:grayscale dark:invert h-9 drop-shadow-lg rounded-full" alt="Logo" /> */}
                     <span className="self-center text-2xl font-semibold whitespace-nowrap text-slate-600 dark:text-slate-300">EMPRESA Dispositivos</span>
                 </a>

@@ -1,8 +1,8 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createHashRouter } from 'react-router-dom';
 import { NotFoundPage } from "../presentation/pages/not-found.page";
 import { routesAuth } from '../presentation/auth/routes/router';
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
     {
         path: '/',
         async lazy() {

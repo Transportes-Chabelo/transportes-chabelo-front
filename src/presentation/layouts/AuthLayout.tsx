@@ -10,8 +10,8 @@ export const AuthLayout = () => {
   }
 
   return (
-    <main className="flex h-screen">
-      <aside className="w-96 flex flex-col shadow-lg dark:shadow-slate-600 px-2 bg-slate-50 dark:bg-slate-900">
+    <main className="flex h-screen w-screen">
+      <aside className=" flex flex-col shadow-lg dark:shadow-slate-600 px-2 bg-slate-50 dark:bg-slate-900 w-0 sm:w-96">
         {/* <img className="size-16 dark:grayscale dark:invert drop-shadow-lg" src={logo} alt="logo" /> */}
         <section className="flex-1 flex flex-col justify-evenly pb-20">
           <Text className="font-semibold" variant="text-3xl">Hello, wellcome back...</Text>
