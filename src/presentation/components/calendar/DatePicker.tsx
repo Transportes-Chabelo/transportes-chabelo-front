@@ -82,12 +82,12 @@ export const DatePicker = ({ date, label = 'Date', onChange, locale = 'es', type
         ({ label, onClick, isShow, next, previous }: Select) => {
             return (
                 <div className="flex gap-2 items-center ">
-                    <IconBtn children={<CheveronLeft classname='size-7' />} onClick={previous} />
+                    <IconBtn children={<CheveronLeft className='size-7' />} onClick={previous} />
                     <span className='flex gap-1'>
                         <p className='font-semibold'>{label}</p>
-                        <IconBtn className='' onClick={onClick} children={<Caret classname={`size-5 ${isShow ? "rotate-180" : ''}`} />} />
+                        <IconBtn className='' onClick={onClick} children={<Caret className={`size-5 ${isShow ? "rotate-180" : ''}`} />} />
                     </span>
-                    <IconBtn children={<CheveronLeft classname='size-7 rotate-180' />} onClick={next} />
+                    <IconBtn children={<CheveronLeft className='size-7 rotate-180' />} onClick={next} />
                 </div>
             )
         },
@@ -98,9 +98,9 @@ export const DatePicker = ({ date, label = 'Date', onChange, locale = 'es', type
         ({ minus, plus, value }: Digit) => {
             return (
                 <div className='flex flex-col items-center'>
-                    <IconBtn onClick={plus} className="rotate-90"><CheveronLeft classname='size-7' /></IconBtn>
+                    <IconBtn onClick={plus} className="rotate-90"><CheveronLeft className='size-7' /></IconBtn>
                     <p className='text-4xl font-semibold'>{`${value}`.padStart(2, '0')}</p>
-                    <IconBtn onClick={minus} className="-rotate-90"><CheveronLeft classname='size-7' /></IconBtn>
+                    <IconBtn onClick={minus} className="-rotate-90"><CheveronLeft className='size-7' /></IconBtn>
                 </div>
             )
         },

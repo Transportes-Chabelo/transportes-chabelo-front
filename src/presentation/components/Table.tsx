@@ -224,7 +224,7 @@ export const Table = <T extends object>({ data, columns, useInternalPagination, 
                 placeholder='Search'
                 styleField={{ height: '35px' }}
                 leading={<Search />}
-                trailing={<X classname='icon-btn' onClick={clear} />}
+                trailing={<X className='icon-btn' onClick={clear} />}
                 value={value}
                 onChange={e => setValue(e.target.value)}
             />

@@ -9,7 +9,7 @@ import { useHandleError, useUpdateUser } from "../../../hooks";
 
 interface Inputs { newPassword: string; confirm: string; }
 
-export const UserModalContent = <T extends object>({ dialog, reference, rect }: ModalContent<T>) => {
+export const UserModalContent = <T extends object>({ dialog, rect }: ModalContent<T>) => {
     const user = useAuthStore(state => state.user);
     const logOut = useAuthStore(state => state.logOut);
     const [isChangePassword, setIsChangePassword] = useState(false);
@@ -55,12 +55,12 @@ export const UserModalContent = <T extends object>({ dialog, reference, rect }: 
 
     const onClickExit = useCallback(
         () => {
-            reference.current?.classList.add('scale-down-top-right');
-            reference.current?.addEventListener('animationend', () => {
-                logOut();
-            });
+            // reference.current?.classList.add('scale-down-top-right');
+            // reference.current?.addEventListener('animationend', () => {
+            // });
+            logOut();
         },
-        [reference, logOut],
+        [logOut],
     );
 
     const FormChangePassword = () => {
@@ -92,7 +92,7 @@ export const UserModalContent = <T extends object>({ dialog, reference, rect }: 
     }
 
     return (
-        <div onAnimationEnd={onAnimationEnd} ref={reference} className='user-modal scale-up-top-right' style={rect && { top: rect.bottom, right: rect.width }} >
+        <div onAnimationEnd={onAnimationEnd} className='user-modal scale-up-top-right' style={rect && { top: rect.bottom, right: rect.width }} >
             <section className='details'>
                 <Text children={user?.userName} />
                 <Text children={user?.fullName} />

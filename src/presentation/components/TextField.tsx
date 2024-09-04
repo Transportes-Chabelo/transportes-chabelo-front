@@ -24,7 +24,7 @@ export const TextField = <T extends object>({ control, name, labelText, rules, .
     )
 }
 
-export const TextArea = <T extends object>({ control, name, labelText, rules, ...props }: TextFieldProps<T>) => {
+export const TextArea = <T extends object>({ control, name,  rules }: TextFieldProps<T>) => {
     return (
         <Controller
             control={control}

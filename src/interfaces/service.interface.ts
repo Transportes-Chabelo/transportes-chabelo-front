@@ -61,7 +61,7 @@ export interface propsUserCreate {
     userName: string;
     phone?: string;
     password?: string;
-    role?: TypeUser;
+    role?: any;
     isActive?: boolean;
 }
 

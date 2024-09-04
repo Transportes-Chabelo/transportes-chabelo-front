@@ -18,7 +18,7 @@ export const Button = ({ children, className, full = true, loading = false, type
             {...props}
             disabled={loading}
         >
-            {loading ? <Spinner classname="animate-spin mx-auto" /> : children}
+            {loading ? <Spinner className="animate-spin mx-auto" /> : children}
         </button>
     )
 }

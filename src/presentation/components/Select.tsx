@@ -1,5 +1,4 @@
 import React from "react";
-import { Text } from "./Text";
 import SelectInput, { Props as PropsSelect } from "react-select";
 import { useFieldChanges } from "../../hooks";
 

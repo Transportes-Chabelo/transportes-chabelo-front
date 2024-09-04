@@ -6,7 +6,7 @@ import { Moon, Palette, Sun, Circle } from "../../icons/icons";
 import { ModalContent } from "../../interfaces/interfaces"
 import { Text } from "../Text";
 
-export const ConfigModalContent = <T extends object>({ dialog, reference }: ModalContent<T>) => {
+export const ConfigModalContent = <T extends object>({ dialog }: ModalContent<T>) => {
 
     const mode = useThemeStore(state => state.mode);
     const updateMode = useThemeStore.getState().updateMode;
@@ -23,7 +23,7 @@ export const ConfigModalContent = <T extends object>({ dialog, reference }: Moda
     );
 
     return (
-        <aside ref={reference} onAnimationEnd={onAnimationEnd} className='config scale-up-horizontal-right' >
+        <aside onAnimationEnd={onAnimationEnd} className='config scale-up-horizontal-right' >
             <div className='config_theme'>
                 <Text>Theme mode</Text>
                 <section>

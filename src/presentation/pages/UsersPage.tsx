@@ -163,13 +163,13 @@ export const UsersPage = () => {
                 if(close) dialogAlertDelete.current?.close();
                 setValue(undefined);
             }}>
-                <AlertModalContent dialog={dialogAlertDelete} btnlabelCanel = "No, cancel" btnlabelConfirm="Yes, I'm sure" type="error" label="Are you sure you want to delete this user?" Icon={<Delete classname="mx-auto mb-4 w-12 h-12 mt-10" />} onSuccess={onDelete} />
+                <AlertModalContent dialog={dialogAlertDelete} btnlabelCanel = "No, cancel" btnlabelConfirm="Yes, I'm sure" type="error" label="Are you sure you want to delete this user?" Icon={<Delete className="mx-auto mb-4 w-12 h-12 mt-10" />} onSuccess={onDelete} />
             </Portal>
             <Portal refElement={dialogAlertReactivar} onClosed={(close) => {
                 if(close) dialogAlertReactivar.current?.close();
                 setValue(undefined);
             }}>
-                <AlertModalContent dialog={dialogAlertReactivar} btnlabelCanel = "No, cancel" btnlabelConfirm="Yes, I'm sure" type="alert" label="Are you sure you want to hability this user?" Icon={<Question classname="mx-auto mb-4 w-12 h-12 mt-10" />} onSuccess={onReActivate} />
+                <AlertModalContent dialog={dialogAlertReactivar} btnlabelCanel = "No, cancel" btnlabelConfirm="Yes, I'm sure" type="alert" label="Are you sure you want to hability this user?" Icon={<Question className="mx-auto mb-4 w-12 h-12 mt-10" />} onSuccess={onReActivate} />
             </Portal>
             <header className="flex w-full m-1 h-16 items-center justify-between">
                 <h1 className="text-4xl font-semibold" >Users</h1>
@@ -209,7 +209,7 @@ export const UsersPage = () => {
                     <SimpleSelect selected={Rows.find(e => e.value === pagination.pageSize)?.label ?? ""} options={Rows} onSelect={(value) => setPagination({ ...pagination, pageSize: value.value })} />
                     <Text>{`${data?.meta.page}-${pagination.pageSize} of ${data?.meta.lastPage}`}</Text>
                     <IconBtn onClick={() => setPagination({ ...pagination, pageIndex: pagination.pageIndex - 1 })} children={<CheveronLeft />} />
-                    <IconBtn onClick={() => setPagination({ ...pagination, pageIndex: pagination.pageIndex + 1 })} children={<CheveronLeft classname="rotate-180" />} />
+                    <IconBtn onClick={() => setPagination({ ...pagination, pageIndex: pagination.pageIndex + 1 })} children={<CheveronLeft className="rotate-180" />} />
                 </div>
             </div>
         </article >

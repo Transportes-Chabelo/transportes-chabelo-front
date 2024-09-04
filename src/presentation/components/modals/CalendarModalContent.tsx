@@ -71,11 +71,11 @@ export const CalendarModalContent = <T extends object>({ dialog, onChenge, local
                             <span className='flex justify-between my-4'>
                                 <span className='flex gap-2'>
                                     <p>{monthName} {date.date.year}</p>
-                                    <IconBtn className="bg-transparent" onClick={() => setIsSelectYear(!isSelectYear)} children={<Caret classname={`${isSelectYear ? "rotate-180" : ''} size-5`} />} />
+                                    <IconBtn className="bg-transparent" onClick={() => setIsSelectYear(!isSelectYear)} children={<Caret className={`${isSelectYear ? "rotate-180" : ''} size-5`} />} />
                                 </span>
                                 <span className='flex gap-2'>
                                     <IconBtn onClick={() => setDate(modDate({ dateI: date.DATE, addMonth: -1 }))} children={<CheveronLeft />} />
-                                    <IconBtn onClick={() => setDate(modDate({ dateI: date.DATE, addMonth: 1 }))} children={<CheveronLeft classname='rotate-180' />} />
+                                    <IconBtn onClick={() => setDate(modDate({ dateI: date.DATE, addMonth: 1 }))} children={<CheveronLeft className='rotate-180' />} />
                                 </span>
                             </span>
                             <Calendar date={date} onChange={setDate} isSelectYear={isSelectYear} />
