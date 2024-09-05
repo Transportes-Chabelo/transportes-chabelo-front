@@ -22,6 +22,7 @@ export function useNavs() {
             { validate: true, icon: Home({}), title: 'Home', path: '/home' },
             { validate: (user?.role !== TypeUser.user), icon: Users({}), title: 'Users', path: '/users' },
             { validate: true, icon: Home({}), title: 'Group Device', path: '/group-device' },
+            { validate: true, icon: Home({}), title: 'Areas', path: '/areas' },
             // { validate: true, icon: Ticket(), title: 'Srs - Sta', path: '/reports/system-request' },
             // { validate: true, icon: InOut(), title: 'Tess - Tesse', path: '/reports/technical-on-site' },
             // { validate: true, icon: Clock1(), title: 'Attention', path: '/reports/attention' },

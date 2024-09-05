@@ -1,8 +1,6 @@
 import React from 'react'
 
-interface Props extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
-
-}
+type Props = React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
 
 export const IconBtn = ({ children, className, ...props }: Props) => {
     return (

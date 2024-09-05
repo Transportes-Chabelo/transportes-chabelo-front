@@ -36,6 +36,13 @@ export const router = createHashRouter([
                 }
             },
             {
+                path: 'areas',
+                async lazy() {
+                    const { AreaPage } = await import('../presentation/pages/AreaPage');
+                    return { Component: AreaPage };
+                }
+            },
+            {
                 path: 'home/branch/:id',
                 async lazy() {
                     const { BranchDevicesPage } = await import('../presentation/pages/BranchDevicesPage');

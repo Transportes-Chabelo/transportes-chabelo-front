@@ -38,6 +38,14 @@ export interface DeviceGroupResponse {
     createdAt: string;
 }
 
+export interface AreaResponse {
+    id: string;
+    name: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt?: Date;
+}
+
 export interface DeviceResponse {
     id: string;
     name: string;

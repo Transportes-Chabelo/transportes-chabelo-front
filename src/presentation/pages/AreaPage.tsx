@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { DeviceGroupResponse } from "../../interfaces";
 import { Add, Update } from "../icons/icons";
 import { useHandleError } from "../../hooks";
 import { Button } from "../components/Button";
@@ -7,24 +6,24 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Table } from "../components/Table";
 import { TextField } from "../components/TextField";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useGroupDeviceCreate, useGroupDeviceUpdate, useGroupDevice } from "../../hooks/useDeviceGroup";
+import { useArea,useAreaCreate,useAreaUpdate } from "../../hooks";
 import { toast } from "sonner";
+import { AreaResponse } from "../../interfaces";
 
-export const GroupDevicePage = () => {
+export const AreaPage = () => {
     const { showError } = useHandleError();
-    const [value, setValue] = useState<DeviceGroupResponse | undefined>();
+    const [value, setValue] = useState<AreaResponse | undefined>();
     const inputRef = useRef<HTMLInputElement>(null);
-    
+
     const { handleSubmit, control, reset, setValue: setValueForm } = useForm<{ name: string }>({ defaultValues: { name: '' } });
-    
-    const mutationCreate = useGroupDeviceCreate();
-    const mutationUpdate = useGroupDeviceUpdate();
 
-    const { data, isLoading, isFetching, error, refetch } = useGroupDevice();
+    const mutationCreate =  useAreaCreate();
+    const mutationUpdate = useAreaUpdate();
 
-    const columns = useMemo<ColumnDef<DeviceGroupResponse>[]>(() => [
+    const { data, isLoading, isFetching, error, refetch } = useArea();
+
+    const columns = useMemo<ColumnDef<AreaResponse>[]>(() => [
         { accessorKey: 'name', header: 'name' },
-        { accessorKey: 'createdAt', header: 'Date Created' },
     ], []);
 
     const onSubmit: SubmitHandler<{ name: string }> = async ({ name }) => {
@@ -67,35 +66,35 @@ export const GroupDevicePage = () => {
     return (
         <article className="flex-1 flex flex-col px-1 container mx-auto w-auto">
             <header className="flex w-full m-1 h-16 items-center justify-between min-w-[600px]">
-                <h1 className="text-4xl font-semibold" >Device Group</h1>
+                <h1 className="text-4xl font-semibold">Areas</h1>
                 <form className="flex gap-3 items-center" onSubmit={handleSubmit(onSubmit)}>
                     <TextField
                         classNameContent="w-auto"
                         reference={inputRef}
                         control={control}
                         name="name"
-                        labelText="Group"
+                        labelText="Create area"
                         rules={{ required: { value: true, message: 'name is required' } }}
                     />
                     <Button type="submit" className="flex gap-2 items-center" loading={mutationUpdate.isPending || mutationCreate.isPending || isLoading}>
                         {value ? <Update /> : <Add />}
-                        {value ? "Update Device" : "Add Device"}
+                        {value ? "Update Area" : "Add Area"}
                     </Button>
                 </form>
             </header>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <Table {...{
-                    KeyName: "groups",
+                    KeyName: "areas",
                     columns,
                     data: data ?? [],
                     onValue: setValue,
                     useInternalPagination: true,
-                    header: { title: 'List groups' },
+                    header: { title: 'List areas' },
                     maxHeight: 450,
                     shadow: true,
                     selectRow:true
                 }} />
             </div>
         </article >
-    )   
+    )
 };

@@ -5,7 +5,6 @@ import { CloudDownload, Search, X } from '../icons/icons';
 import Input from './Input';
 import { Text } from './Text';
 
-
 interface PropsTable<T> {
     KeyName:string;
     data: Array<T>;
@@ -68,7 +67,7 @@ export const Table = <T extends object>({ data, columns, useInternalPagination, 
     }
 
     useEffect(() => {
-        if (selectRow === true) setColumns(columns.filter(f => f.header !== 'action'));
+        if (selectRow === true) setColumns(columns.filter(f => f.header));
     }, [columns, selectRow]);
 
     return (
@@ -119,7 +118,7 @@ export const Table = <T extends object>({ data, columns, useInternalPagination, 
                     <tbody>
                         {table.getRowModel().rows.map(row => {
                             return (
-                                <tr key={row.id} className="bg-slate-100 border-b dark:bg-gray-900 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-800" onClick={onRowSelect(row.original)}>
+                                <tr key={row.id} className="bg-slate-100 border-b dark:bg-gray-900 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-800" onDoubleClick={onRowSelect(row.original)}>
                                     {
                                         row.getVisibleCells().map(cell => {
                                             return (cell.column.id === 'action')
@@ -149,10 +148,10 @@ export const Table = <T extends object>({ data, columns, useInternalPagination, 
             </div>
             {useInternalPagination &&
                 <div className="flex justify-end items-center p-2 gap-3 text-gray-700 bg-slate-300 dark:bg-slate-950 dark:text-slate-300 rounded-b-lg">
-                    <IconBtn className='px-1' children='<<' disabled={!table.getCanPreviousPage()} onClick={() => table.firstPage()} />
-                    <IconBtn className='px-2' children='<' onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} />
-                    <IconBtn className='px-2' children='>' onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} />
-                    <IconBtn className='px-1' children='>>' onClick={() => table.lastPage()} disabled={!table.getCanNextPage()} />
+                    <IconBtn className='text-blue-600 dark:text-blue-400 px-1' children='<<' disabled={!table.getCanPreviousPage()} onClick={() => table.firstPage()} />
+                    <IconBtn className='text-blue-600 dark:text-blue-400 px-2' children='<' onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} />
+                    <IconBtn className='text-blue-600 dark:text-blue-400 px-2' children='>' onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} />
+                    <IconBtn className='text-blue-600 dark:text-blue-400 px-1' children='>>' onClick={() => table.lastPage()} disabled={!table.getCanNextPage()} />
                     <span className="flex items-center gap-1">
                         <div>Page</div>
                         <strong>
@@ -174,7 +173,7 @@ export const Table = <T extends object>({ data, columns, useInternalPagination, 
                         />
                     </span> */}
                     <select
-                        className=''
+                        className='text-gray-700 dark:text-slate-300'
                         style={{ backgroundColor: 'transparent' }}
                         value={table.getState().pagination.pageSize}
                         onChange={e => {
@@ -182,7 +181,7 @@ export const Table = <T extends object>({ data, columns, useInternalPagination, 
                         }}
                     >
                         {[10, 30, 50, 100, data.length].map(pageSize => (
-                            <option key={pageSize} value={pageSize}>
+                            <option className='text-gray-700 bg-slate-300 dark:bg-slate-950 dark:text-slate-300' key={pageSize} value={pageSize}>
                                 {pageSize === data.length ? "All " + pageSize : "Show " + pageSize}
                             </option>
                         ))}
