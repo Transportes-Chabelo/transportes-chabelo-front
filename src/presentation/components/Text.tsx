@@ -1,5 +1,6 @@
 import React from "react";
 import { TypeScale } from "../interfaces/types";
+import { textColor } from "../App";
 
 interface Props {
     children: React.ReactNode;
@@ -9,6 +10,6 @@ interface Props {
 }
 export const Text = ({ variant = 'text-base', children, style, className }: Props) => {
     return (
-        <p className={`text-slate-600 dark:text-slate-300 ${variant} ${className}`} style={style}>{children}</p>
+        <p className={`${textColor} ${variant} ${className}`} style={style}>{children}</p>
     )
 }

@@ -56,6 +56,8 @@ export interface DeviceResponse {
     status: string;
     createdAt: Date;
     updatedAt: Date;
+    holderDeviceId?: string,
+    DeviceGroup: DeviceGroupResponse
 }
 
 export interface ErrorResponse {
@@ -85,10 +87,10 @@ export interface propsFormDeviceCreate {
     name: string;
     brand: string;
     model: string;
-    barCode?: string;  
+    barCode?: string;
     price?: number;
-    status: {label:string, value:any};
-    deviceGroupId: {label:string, value:any};
+    status: { label: string, value: any };
+    deviceGroupId: { label: string, value: any };
     deviceId?: string;
     branchId: string;
 }
@@ -97,7 +99,7 @@ export interface propsDeviceCreate {
     name: string;
     brand: string;
     model: string;
-    barCode?: string;  
+    barCode?: string;
     price?: number;
     status: string;
     deviceGroupId: string;
@@ -109,10 +111,10 @@ export interface propsDeviceCreateU {
     name: string;
     brand: string;
     model: string;
-    barCode?: string;  
+    barCode?: string;
     price?: number;
-    status: {label:string, value:any};
-    deviceGroupId: {label:string, value:any};
+    status: { label: string, value: any };
+    deviceGroupId: { label: string, value: any };
     deviceId?: string;
     branchId: string;
 }

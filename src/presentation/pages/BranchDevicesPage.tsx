@@ -27,7 +27,7 @@ const options: Array<{ value: string, label: string }> = [
     { label: "DESCONOCIDO", value: "DESCONOCIDO" }
 ];
 
-const defaultValues: propsFormDeviceCreate = { name: '', brand: '', model: '', barCode: '', deviceId: undefined, branchId: '', deviceGroupId: {label:'',value:''}, price: undefined, status: {label:'',value:''}}
+const defaultValues: propsFormDeviceCreate = { name: '', brand: '', model: '', barCode: '', deviceId: undefined, branchId: '', deviceGroupId: { label: '', value: '' }, price: undefined, status: { label: '', value: '' } }
 
 export const BranchDevicesPage = () => {
     const { id } = useParams<"id">();
@@ -50,7 +50,7 @@ export const BranchDevicesPage = () => {
     const { data, isLoading, isFetching, error, refetch } = useBranch(id ?? "");
 
     const columns = useMemo<ColumnDef<DeviceResponse>[]>(() => [
-        { accessorKey: 'name', header: 'name' },
+        { accessorKey: 'DeviceGroup.name', header: 'type' },
         { accessorKey: 'brand', header: 'brand' },
         { accessorKey: 'model', header: 'model' },
         { accessorKey: 'barCode', header: 'barCode' },
@@ -60,15 +60,12 @@ export const BranchDevicesPage = () => {
         { header: 'action' },
     ], []);
 
-    const actions = ({ row: { original: { name, brand, model, status, barCode, price, id } } }: { row: Row<DeviceResponse> }) => {
+    const actions = ({ row: { original: { name, brand, model, status, barCode, price, id, DeviceGroup, holderDeviceId } } }: { row: Row<DeviceResponse> }) => {
         return (
             <div className="flex gap-2">
-                <IconBtn className="text-blue-500" children={<Add />} onClick={() => {
-                    dialog.current?.show();
-                    setValueForm('deviceId', id);
-                }} />
+                {!holderDeviceId && <IconBtn className="text-blue-500" children={<Add />} onClick={create(id)} />}
                 <IconBtn className="text-blue-500" children={<Pencil />} onClick={() => {
-                    setValue({ name, brand, model, status: options.find(f => f.value == status) ?? options[0], barCode, price, id });
+                    setValue({ name, brand, model, status: options.find(f => f.value == status) ?? options[0], barCode, price, id, deviceGroupId: { value: DeviceGroup.id, label: DeviceGroup.name } });
                 }} />
                 <IconBtn className="text-green-500" children={<ArrowLeft className="rotate-180" />} onClick={() => {
                     setValue2({ id, name });
@@ -83,8 +80,8 @@ export const BranchDevicesPage = () => {
     const onSubmit: SubmitHandler<propsFormDeviceCreate> = useCallback(
         async (values) => {
             if (value) {
-                const { name, brand, model, barCode, price } = values
-                mutationUpdate.mutate({ id: value.id, props: { name, brand, model, status: values.status.value, barCode, price } }, {
+                const { name, brand, model, barCode, price, deviceGroupId } = values
+                mutationUpdate.mutate({ id: value.id, props: { name, brand, model, status: values.status.value, barCode, price, deviceGroupId: deviceGroupId.value } }, {
                     onSuccess() {
                         toast.success('Device Updated ...');
                         setValue(undefined);
@@ -97,7 +94,6 @@ export const BranchDevicesPage = () => {
                 });
             } else {
                 // console.log(values);
-                
                 mutationCreate.mutate({ ...values, branchId: data!.id, deviceGroupId: values.deviceGroupId.value, status: values.status.value }, {
                     onSuccess() {
                         toast.success('Device Created ...');
@@ -134,13 +130,24 @@ export const BranchDevicesPage = () => {
 
     if (!isFetching && !isLoading && error) showError({ responseError: error, exit: true });
 
+    const create = useCallback(
+        (father?: string) => () => {
+            dialog.current?.show();
+            if (father) setValueForm('deviceId', id);
+            else reset();
+        },
+        [id, reset, setValueForm],
+    )
+
+
     useEffect(() => {
+        reset(defaultValues);
         if (value) {
-            reset();
             setValueForm('name', value.name ?? "");
             setValueForm('brand', value.brand ?? "");
             setValueForm('model', value.model ?? "");
             setValueForm('status', value.status ?? options[0]);
+            setValueForm('deviceGroupId', value.deviceGroupId ?? options[0]);
             setValueForm('barCode', value.barCode);
             setValueForm('price', value.price);
             dialog.current?.show();
@@ -150,40 +157,38 @@ export const BranchDevicesPage = () => {
     }, [reset, setValueForm, value])
 
     return (
-        <article className="flex-1 flex flex-col px-1">
+        <article className="flex-1 flex flex-col container mx-auto px-5 pb-5 gap-5">
             <Portal refElement={dialog} onClosed={(close) => {
                 if (close) dialog.current?.close();
+                setValueForm('deviceId', '');
                 reset(defaultValues);
             }} >
                 <div className="bg-slate-100 dark:bg-slate-800 p-5 rounded-xl shadow-md dark:shadow-slate-950 w-[600px]">
                     <span className="flex mb-4 justify-between items-center">
                         <h1 className="text-2xl font-semibold">Create Device for {data?.name}</h1>
                         <IconBtn onClick={() => {
-                            dialog.current?.close();
                             reset(defaultValues);
                             setValue(undefined);
+                            dialog.current?.close();
                         }} children={<X />} />
                     </span>
-
                     <form className="flex flex-1 gap-3 flex-col" onSubmit={handleSubmit(onSubmit)}>
-                        <TextField
+                        {!value  && <TextField
                             classNameContent="flex-1"
                             control={control}
                             name="deviceId"
                             labelText="Device"
                             disabled
-                        />
-                        {
-                            !value && <span className="flex gap-2">
-                                <SelectField
-                                    rules={{ required: { value: true, message: 'status required...' } }}
-                                    control={control}
-                                    name="deviceGroupId"
-                                    placeholder="Select Group..."
-                                    options={groups?.map(a => ({ label: a.name, value: a.id })) ?? []}
-                                />
-                            </span>
-                        }
+                        />}
+                        <span className="flex gap-2">
+                            <SelectField
+                                rules={{ required: { value: true, message: 'status required...' } }}
+                                control={control}
+                                name="deviceGroupId"
+                                placeholder="Select Group..."
+                                options={groups?.map(a => ({ label: a.name, value: a.id })) ?? []}
+                            />
+                        </span>
                         <span className="flex gap-2">
                             <TextField
                                 classNameContent="flex-1"
@@ -266,14 +271,12 @@ export const BranchDevicesPage = () => {
                     </form>
                 </div>
             </Portal>
-            <header className="flex w-full m-1 h-16 items-center justify-between">
+            <header className="flex w-full items-center justify-between mt-5 gap-5">
                 <span className="flex gap-5 items-center">
                     <IconBtn className="size-9 flex justify-center items-center text-blue-600 dark:text-blue-400" onClick={() => navigate('/home')} children={<ArrowLeft />} />
-                    <h1 className="text-4xl font-semibold" >Devices {data?.name}</h1>
+                    <h1 className="text-2xl md:text-3xl font-semibold">Devices {data?.name}</h1>
                 </span>
-                <Button className="flex gap-2 items-center" loading={isLoading} onClick={() => {
-                    dialog.current?.show();
-                }}>
+                <Button className="flex gap-2 items-center" loading={isLoading} onClick={create()}>
                     {value ? <Update /> : <Add />}
                     {value ? "Update Device" : "Add Device"}
                 </Button>
@@ -289,6 +292,7 @@ export const BranchDevicesPage = () => {
                     header: { title: 'List groups' },
                     maxHeight: 450,
                     shadow: true,
+                    selectRow: true
                 }} />
             </div>
         </article >

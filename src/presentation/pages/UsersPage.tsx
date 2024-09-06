@@ -17,6 +17,7 @@ import { Table } from "../components/Table";
 import { PropsSelect } from "../interfaces/interfaces";
 import { AlertModalContent } from "../components/modals/AlertModalContent";
 import { Response } from '../../services/user.service';
+import { bg2, textColor } from "../App";
 
 
 const Rows: Array<PropsSelect<number>> = [
@@ -154,7 +155,7 @@ export const UsersPage = () => {
     return (user?.role === TypeUser.user)
         ? <Navigate to="/home" />
         :
-        <article className="flex-1 flex flex-col px-1">
+        <article className="flex-1 flex flex-col container mx-auto px-5 pb-5">
             <Portal refElement={dialog} onClosed={(close) => close && dialog.current?.close()} >
                 <CreateUserModalContent dialog={dialog} onSuccess={({ exit }) => { if (exit) refetch() }} />
             </Portal>
@@ -171,16 +172,16 @@ export const UsersPage = () => {
                 <AlertModalContent dialog={dialogAlertReactivar} btnlabelCanel="No, cancel" btnlabelConfirm="Yes, I'm sure" type="alert" label="Are you sure you want to hability this user?" Icon={<Question className="mx-auto mb-4 w-12 h-12 mt-10" />} onSuccess={onReActivate} />
             </Portal>
             <header className="flex w-full m-1 h-16 items-center justify-between">
-                <h1 className="text-4xl font-semibold" >Users</h1>
+                <h1 className="text-2xl md:text-3xl font-semibold" >Users</h1>
                 <Button className="flex gap-2 items-center" onClick={() => dialog.current?.show()}>
                     <AddUser />
                     Add user
                 </Button>
             </header>
-            <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <div className="flex items-center justify-end flex-column flex-wra md:space-y-0 p-3 bg-slate-50 dark:bg-slate-900">
+            <div className="relative flex-1 flex flex-col">
+                <div className="flex items-center justify-end flex-column flex-wra md:space-y-0 p-3">
                     <Input
-                        classNameContent='scale-up-horizontal-right'
+                        classNameContent='scale-up-horizontal-right md:w-[300px]'
                         styleField={{ height: '35px' }}
                         leading={<Search />}
                         autoComplete="none"
@@ -203,21 +204,20 @@ export const UsersPage = () => {
                     onValue: setValue,
                     renderSubComponent: actions
                 }} />
-                <div className="text-sm text-gray-700 bg-slate-300 dark:bg-slate-950 dark:text-slate-300 sticky flex justify-end items-center py-4 gap-3 px-4">
-                    <Text>Rows per page:</Text>
+                <div className={`${bg2} ${textColor} text-sm sticky flex justify-end items-en py-4 gap-3 px-4`}>
+                    <Text className="text-sm md:text-base" children="Rows per page:" />
                     <select
-                        className='text-gray-700 dark:text-slate-300'
                         style={{ backgroundColor: 'transparent' }}
                         value={pagination.pageSize}
                         onChange={e => setPagination({ ...pagination, pageSize: Number(e.target.value) })}
                     >
-                        {[5,10,15].map(pageSize => (
-                            <option className='text-gray-700 bg-slate-300 dark:bg-slate-950 dark:text-slate-300' key={pageSize} value={pageSize}>
+                        {[5, 10, 15].map(pageSize => (
+                            <option className={`${bg2}`} key={pageSize} value={pageSize}>
                                 {"Show " + pageSize}
                             </option>
                         ))}
                     </select>
-                    <Text>{`${data?.meta.page}-${pagination.pageSize} of ${data?.meta.lastPage}`}</Text>
+                    <Text className="text-sm md:text-base">{`${data?.meta.page}-${pagination.pageSize} of ${data?.meta.lastPage}`}</Text>
                     <IconBtn onClick={() => setPagination({ ...pagination, pageIndex: pagination.pageIndex - 1 })} children={<CheveronLeft />} />
                     <IconBtn onClick={() => setPagination({ ...pagination, pageIndex: pagination.pageIndex + 1 })} children={<CheveronLeft className="rotate-180" />} />
                 </div>

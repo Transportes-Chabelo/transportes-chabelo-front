@@ -14,9 +14,9 @@ export const GroupDevicePage = () => {
     const { showError } = useHandleError();
     const [value, setValue] = useState<DeviceGroupResponse | undefined>();
     const inputRef = useRef<HTMLInputElement>(null);
-    
+
     const { handleSubmit, control, reset, setValue: setValueForm } = useForm<{ name: string }>({ defaultValues: { name: '' } });
-    
+
     const mutationCreate = useGroupDeviceCreate();
     const mutationUpdate = useGroupDeviceUpdate();
 
@@ -65,10 +65,10 @@ export const GroupDevicePage = () => {
 
 
     return (
-        <article className="flex-1 flex flex-col px-1 container mx-auto w-auto">
-            <header className="flex w-full m-1 h-16 items-center justify-between min-w-[600px]">
-                <h1 className="text-4xl font-semibold" >Device Group</h1>
-                <form className="flex gap-3 items-center" onSubmit={handleSubmit(onSubmit)}>
+        <article className="flex-1 flex flex-col container mx-auto px-5 pb-5 gap-5">
+            <header className="flex w-full items-center justify-between mt-5 gap-5">
+                <h1 className="text-2xl md:text-3xl font-semibold">Device Group</h1>
+                <form className="flex gap-3 items-end md:items-center flex-col-reverse md:flex-row" onSubmit={handleSubmit(onSubmit)}>
                     <TextField
                         classNameContent="w-auto"
                         reference={inputRef}
@@ -93,9 +93,9 @@ export const GroupDevicePage = () => {
                     header: { title: 'List groups' },
                     maxHeight: 450,
                     shadow: true,
-                    selectRow:true
+                    selectRow: true
                 }} />
             </div>
         </article >
-    )   
+    )
 };

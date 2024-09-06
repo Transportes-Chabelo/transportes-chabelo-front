@@ -14,7 +14,7 @@ export const NotFoundPage = () => {
         navigate("/", { replace: true })
     }
     return (
-        <main className="full-flex container-not-found">
+        <main className="flex-1 container-not-found justify-center items-center">
             <img src={Img} alt="404" />
             <Text className="text-color error">404</Text>
             <Text className="text-color paragraph">Página no encontrada</Text>

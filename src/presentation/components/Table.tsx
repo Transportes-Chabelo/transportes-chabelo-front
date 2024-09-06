@@ -71,7 +71,7 @@ export const Table = <T extends object>({ data, columns, useInternalPagination, 
     }, [columns, selectRow]);
 
     return (
-        <div key={KeyName} className={`flex flex-col rounded-lg ${shadow ? "shadow-md" : ""} dark:text-slate-300`}>
+        <div key={KeyName} className={`flex flex-col rounded-lg ${shadow ? "shadow-md" : ""}`}>
             {header &&
                 <section className={`flex justify-between items-center text-gray-700 bg-slate-300 dark:bg-slate-950  py-2 px-4 rounded-t-lg`}>
                     <div>

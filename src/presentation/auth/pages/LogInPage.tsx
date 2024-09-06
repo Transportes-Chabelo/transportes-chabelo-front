@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useAuthStore } from "../../../stores";
 import { useHandleError } from "../../../hooks";
 import { Button } from "../../components/Button";
+import { bg2 } from "../../App";
 
 type InputsLogIn = {
   userName: string,
@@ -26,9 +27,9 @@ export const LogInPage = () => {
     });
 
   return (
-    <article className="w-max h-max min-w-[400px] bg-slate-50 dark:bg-slate-900 p-[2rem] rounded-xl flex flex-col gap-3 shadow-md dark:shadow-slate-700">
+    <article className={`${bg2} p-6 h-full w-full flex flex-col gap-3 justify-center shadow-lg md:h-auto md:w-auto md:rounded-xl`}>
       <h1 className={'text-3xl font-semibold text-slate-600 dark:text-slate-300'}>Sign in</h1>
-      <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
         <TextField
           control={control}
           name="userName"
@@ -40,7 +41,7 @@ export const LogInPage = () => {
           labelText="Password"
           type="password"
         />
-        <Button loading={isPending} children="Sign in" />
+        <Button className="mt-2" loading={isPending} children="Sign in" />
         {/* <Divide label="or" />
         <Text variant="text-lg" className="sform-container_text">Don't have an account? <Link to={'/auth/register'}><strong>Sign up</strong></Link></Text> */}
       </form>
